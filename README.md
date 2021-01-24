@@ -11,7 +11,7 @@
 - Predicting the test data
 
 ## Description 
-- A dataset containing images having 4 digits with labels are the sum of those four digits is given and we have to train our model such that it predicts the sum of those four digits in test datase.
+- A dataset containing images having 4 digits (as shown in the figure) is given and we have to train our model such that it predicts the sum of those four digits when evaluated with test dataset.
 
     ![alt text](https://github.com/LakshmiPratti/ML_NS/blob/main/download.png)
 
