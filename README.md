@@ -12,6 +12,7 @@
 
 ## Description 
 - A dataset containing images having 4 digits with labels are the sum of those four digits is given and we have to train our model such that it predicts the sum of those four digits in test datase.
+![alt text](https://github.com/LakshmiPratti/ML_NS/blob/main/download.png)
 - Trained a CNN (Convolutional Neural Network) on the dataset, which contains a total of 30,000 images containing 4 handwritten digits from 0-9 in each image formatted as 168×40-pixel images.
 - Splitted the dataset into train and test data with size 24,000 and 6,000 respectively.
 - Preprocessed the input data by reshaping the image and scaling the pixel values between 0 and 1.
