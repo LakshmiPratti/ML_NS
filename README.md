@@ -27,6 +27,9 @@
 #If running on your local machine
 python3 code.py
 
+#If running on ada
+sbatch script.sh
+
 ```
 
 ### Importing Libraries
