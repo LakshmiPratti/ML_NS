@@ -41,11 +41,12 @@ if train_new_model:
   num_of_testImgs = x_test.shape[0] 
   img_width = 168
   img_height = 40
- 
+
 # Reshaping the images
   x_train = x_train.reshape(x_train.shape[0], img_height, img_width, 1)
   x_test = x_test.reshape(x_test.shape[0], img_height, img_width, 1)
-  input_shape = (img_height, img_width, 1)
+  test = test.reshape(test.shape[0], img_height, img_width, 1)
+  input_shape = (img_height, img_width,1)
  
   x_train = x_train.astype('float32')
   x_test = x_test.astype('float32')
@@ -58,19 +59,33 @@ if train_new_model:
   num_classes = 37
   y_train = keras.utils.to_categorical(y_train, num_classes)
   y_test = keras.utils.to_categorical(y_test, num_classes)
-
+  
 # Defining the model architecture
+  
   model = Sequential()
   model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
                  input_shape=input_shape))
-  model.add(Conv2D(64, (3, 3),activation='relu'))
-  model.add(MaxPooling2D(pool_size=(2, 2)))
-  model.add(Dropout(0.25))
+  model.add(Conv2D(32, (3, 3), activation='relu'))
+  model.add(MaxPooling2D((2,2)))
+  
+
+  model.add(Conv2D(64, (3,3), padding='same', activation='relu'))
+  model.add(MaxPooling2D((2,2)))
+  
+
+  model.add(Conv2D(128, (3,3), padding='same', activation='relu'))
+  model.add(Conv2D(128, (3,3), activation='relu'))
+  model.add(Activation('relu'))
+  model.add(MaxPooling2D((2,2)))
+  model.add(Dropout(0.2)) 
+
+#### Fully-Connected Layer ####
   model.add(Flatten())
-  model.add(Dense(128,activation='relu'))
-  model.add(Dropout(0.3))
+  model.add(Dense(512, activation='relu'))
+  model.add(Dropout(0.2))
   model.add(Dense(num_classes, activation='softmax'))
+  model.summary()
 
 # Defining Optimizer
   optimizerAdam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0, amsgrad=False)
@@ -79,11 +94,11 @@ if train_new_model:
   
 # Fitting the model  
   history = model.fit(x_train, y_train,
-          batch_size=64,
+          batch_size=128,
           epochs=25,
-          verbose=1,
+          verbose=False,
           validation_data=(x_test, y_test))
-  
+
 # Serialize model to json
   json_model = model.to_json()
 
@@ -91,13 +106,14 @@ if train_new_model:
   with open('Trained_model.json', 'w') as json_file:
       json_file.write(json_model)
 
-# Saving the weights of the model
+# Saving model.add(Dropout(0.3))the weights of the model
   model.save_weights('Trained_weights.h5')
 
 # Evaluate the model
   score = model.evaluate(x_test, y_test, verbose=1)
   print("%s: %.1f%%" % (model.metrics_names[0], score[0]))
-  print("%s: %.1f%%" % (model.metrics_names[1], score[1]*1000))
+  print("%s: %.1f%%" % (model.metrics_names[1], score[1]*100))
+
 
 else:
 # Load json and create model
@@ -111,10 +127,14 @@ else:
   print("Loaded model from disk")
  
 # Evaluate loaded model on test data
-  loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-  score = loaded_model.evaluate(x_test, y_test, verbose=1)
-  print("%s: %.1f%%" % (loaded_model.metrics_names[0], score[0]))
-  print("%s: %.1f%%" % (loaded_model.metrics_names[1], score[1]*1000))
+  #loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+  #score = loaded_model.evaluate(x_test, y_test, verbose=1)
+  #print("%s: %.1f%%" % (loaded_model.metrics_names[0], score[0]))
+  #print("%s: %.1f%%" % (loaded_model.metrics_names[1], score[1]*100))
+
+  prediction = loaded_model.predict_classes(test)
+  np.save('prediction', prediction)
+  
 
 """# **Model Accuracy and Loss plots**"""
 
