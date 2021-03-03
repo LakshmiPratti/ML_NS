@@ -60,19 +60,18 @@ if train_new_model:
   y_train = keras.utils.to_categorical(y_train, num_classes)
   y_test = keras.utils.to_categorical(y_test, num_classes)
   
-# Defining the model architecture
-  
-  model = Sequential()
+ model = Sequential()
   model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
                  input_shape=input_shape))
   model.add(Conv2D(32, (3, 3), activation='relu'))
   model.add(MaxPooling2D((2,2)))
-  
+  model.add(Dropout(0.2)) 
 
   model.add(Conv2D(64, (3,3), padding='same', activation='relu'))
+  model.add(Conv2D(64, (3,3), activation='relu'))
   model.add(MaxPooling2D((2,2)))
-  
+  model.add(Dropout(0.2)) 
 
   model.add(Conv2D(128, (3,3), padding='same', activation='relu'))
   model.add(Conv2D(128, (3,3), activation='relu'))
@@ -82,7 +81,11 @@ if train_new_model:
 
 #### Fully-Connected Layer ####
   model.add(Flatten())
+  model.add(Dense(1024, activation='relu'))
+  model.add(Dropout(0.2))
   model.add(Dense(512, activation='relu'))
+  model.add(Dense(128, activation='relu'))
+  model.add(Dense(64, activation='relu'))
   model.add(Dropout(0.2))
   model.add(Dense(num_classes, activation='softmax'))
   model.summary()
